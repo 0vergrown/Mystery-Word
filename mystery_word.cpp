@@ -2,35 +2,35 @@
 #include <string> // Includes the string library to use string data type
 #include <cstdlib> // Includes libraries for general purpose functions, including random number generation
 #include <ctime> // Includes the time library to work with time-related functions
-#include <Windows.h> // Includes the Windows-specific header for Windows API functions
-
-using namespace std; // Uses the standard namespace to avoid typing 'std::' before standard functions and types
 
 int main() {
 
+    std::string user_input; // Variable to store user input
+    bool exit_game = false; // Boolean flag to control the game loop
+
     // Print the game title and instructions
-    cout << "   Mystery Word!  " << endl;
-    cout << "  ===============  " << endl;
-    cout << "ENTER = Play | ESC = Quit" << endl;
+    std::cout << "   Mystery Word!  " << '\n';
+    std::cout << "  ===============  " << '\n';
+    std::cout << "Y = Play | N = Quit" << '\n';
+    std::cin >> user_input; // Take initial user input
 
-    // Infinite loop to keep checking if the player wants to play or quit
-    while (true) {
-
-        // Check if the ESC key is pressed to quit the game
-        if (GetAsyncKeyState(VK_ESCAPE)) {
-            cout << "You Quit The Game!" << endl;
-            return 0; // Exit the program
+    // Main game loop continues as long as exit_game is not true
+    while (!exit_game) {
+        if (user_input == "n") {
+            std::cout << "You Quit The Game!" << '\n';
+            exit_game = true; // Set exit_game to true, indicating the game should end
+            continue; // Skip to the next iteration of the loop, which will then end because exit_game is true
         }
 
-        // Check if the ENTER key is pressed to start the game
-        if (GetAsyncKeyState(VK_RETURN)) {
-            cout << "Let's Play!" << endl;
+        // If user chooses to play the game
+        if (user_input == "y") {
+            std::cout << "Let's Play!" << '\n';
 
             // Initialize random seed based on the current time
             srand(time(0));
 
             // Array of possible words to guess
-            const string word_list[30] = {
+            const std::string word_list[30] = {
               "bad",
               "easy",
               "lol",
@@ -64,22 +64,22 @@ int main() {
             };
 
             // Select a random word from the list
-            string word = word_list[rand() % 30];
+            std::string word = word_list[rand() % 30];
 
             // Create a masked word filled with dashes
-            string masked_word(word.length(), '-');
+            std::string masked_word(word.length(), '-');
 
             // Number of allowed incorrect guesses
             int attempts = 6;
 
             // Display the masked word and invite player to guess
-            cout << "Let's Play! Guess the word: " << masked_word << endl;
+            std::cout << "Let's Play! Guess the word: " << masked_word << '\n';
 
             // Game loop runs as long as there are attempts left or word is not guessed
             while (attempts > 0 && masked_word != word) {
-                cout << "Enter your guess (one letter): ";
+                std::cout << "Enter your guess (one letter): ";
                 char guess;
-                cin >> guess;
+                std::cin >> guess;
 
                 // Flag to check if the guessed letter is in the word
                 bool found = false;
@@ -93,28 +93,33 @@ int main() {
                 // Handle incorrect guesses
                 if (!found) {
                     attempts--; // Decrease the number of attempts left
-                    cout << "Wrong guess! " << attempts << " attempts left." << endl;
+                    std::cout << "Wrong guess! " << attempts << " attempts left." << '\n';
                 }
                 else {
-                    cout << "Good guess!" << endl;
+                    std::cout << "Good guess!" << '\n';
                 }
 
                 // Display the current state of the guessed word
-                cout << "Current word: " << masked_word << endl;
+                std::cout << "Current word: " << masked_word << '\n';
 
                 // Check if the word is completely guessed
                 if (masked_word == word) {
-                    cout << "Congratulations! You guessed the word: " << word << endl;
+                    std::cout << "Congratulations! You guessed the word: " << word << '\n';
                     break; // Exit the loop if word is guessed correctly
                 }
 
                 // Handle running out of attempts
                 if (attempts == 0) {
-                    cout << "Out of attempts! The word was: " << word << endl;
+                    std::cout << "Out of attempts! The word was: " << word << '\n';
                 }
             }
 
-            return 0; // Exit after one round for simplicity...
+        }
+
+        // Prompt user to play again if they have not chosen to exit
+        if (!exit_game) {
+            std::cout << "Want To Play Again (y/n): " << '\n';
+            std::cin >> user_input; // Take user input to continue or exit
         }
     }
 }
